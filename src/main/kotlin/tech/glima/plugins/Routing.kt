@@ -5,6 +5,8 @@ import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.response.*
 import io.ktor.server.request.*
+import tech.glima.model.Customer
+import tech.glima.routes.customerRouting
 
 fun Application.configureRouting() {
 
@@ -13,7 +15,10 @@ fun Application.configureRouting() {
         get("/") {
             call.respondText("Hello World!")
         }
-    }
-    routing {
+
+        route("/customer") {
+            customerRouting()
+        }
     }
 }
+
