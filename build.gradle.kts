@@ -1,7 +1,6 @@
 val ktor_version: String by project
 val kotlin_version: String by project
 val logback_version: String by project
-
 plugins {
     application
     kotlin("jvm") version "1.7.10"
@@ -31,7 +30,6 @@ dependencies {
     implementation("ch.qos.logback:logback-classic:$logback_version")
 
     // database
-    implementation("org.jetbrains.exposed:exposed:0.12.1")
     implementation("com.h2database:h2:2.1.212")
 
     testImplementation("io.ktor:ktor-server-test-host:$ktor_version")
