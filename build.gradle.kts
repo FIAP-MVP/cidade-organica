@@ -3,8 +3,11 @@ import org.gradle.internal.impldep.org.fusesource.jansi.AnsiRenderer.test
 val ktor_version: String by project
 val kotlin_version: String by project
 val logback_version: String by project
-val kotest_version = "5.4.2"
-val mockk_version = "1.12.8"
+val exposed_version: String by project
+val h2_version: String by project
+val kotest_version: String by project
+val mockk_version : String by project
+
 plugins {
     application
     kotlin("jvm") version "1.7.10"
@@ -37,8 +40,14 @@ dependencies {
     implementation("ch.qos.logback:logback-classic:$logback_version")
 
     // database
-    implementation("com.h2database:h2:2.1.212")
+    implementation("org.jetbrains.exposed:exposed-core:$exposed_version")
+    implementation("org.jetbrains.exposed:exposed-dao:$exposed_version")
+    implementation("org.jetbrains.exposed:exposed-jdbc:$exposed_version")
+    implementation("com.h2database:h2:$h2_version")
+    implementation("com.oracle.database.jdbc:ojdbc8:21.7.0.0")
 
+
+    //Test
     testImplementation("io.ktor:ktor-server-test-host:$ktor_version")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version")
     testImplementation("io.kotest:kotest-runner-junit5:$kotest_version")

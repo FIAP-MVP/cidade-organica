@@ -1,8 +1,14 @@
 package tech.glima.model
 
-import kotlinx.serialization.Serializable
+import org.jetbrains.exposed.sql.*
 
-@Serializable
-data class Customer(val id: String? = null, val firstName: String?, val lastName: String, val email: String)
+@kotlinx.serialization.Serializable
+data class Customer(val id: Int? = null, val name: String, val email: String)
 
-val customerStorage = mutableListOf<Customer>()
+object Customers : Table() {
+    val id = integer("id").autoIncrement()
+    val name = varchar("name", 60)
+    val email = varchar("email", 120)
+
+    override val primaryKey = PrimaryKey(id)
+}
