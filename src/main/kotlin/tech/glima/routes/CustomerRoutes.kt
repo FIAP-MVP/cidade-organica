@@ -5,45 +5,55 @@ import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import tech.glima.database.dao.dao
+import org.json.JSONObject
+import org.koin.ktor.ext.inject
 import tech.glima.model.Customer
+import tech.glima.service.CustomerService
 
 fun Route.customerRouting() {
+
+    val customerService: CustomerService by inject()
+
     route("") {
         get {
-            call.respond(status = HttpStatusCode.OK, mapOf("customers" to dao.allCustomers()))
+            call.respond(customerService.listAllCustomers())
         }
-        get("/{id?}") {
-            val id = call.parameters["id"]
-            if (id != null) {
-                call.respond(status = HttpStatusCode.OK, mapOf("customer" to dao.customer(id.toInt())))
-            } else call.respond(status = HttpStatusCode.BadRequest, message = "Id inválido")
 
+        get("/{id?}") {
+            val id = call.parameters["id"]?.toInt()
+            customerService.getCustomer(id)?.let {
+                call.respond(it)
+            }
+            call.respond(HttpStatusCode.BadRequest, JSONObject())
         }
+
         put("/{id?}") {
             val customer = call.receive<Customer>()
             call.parameters["id"]?.let { id ->
                 with(customer) {
-                    dao.editCustomer(id = id.toInt(), name = name, email = email)
+                    customerService.update(id = id.toInt(), name = name, email = email)
                 }
                 call.respond(status = HttpStatusCode.OK, "ok")
-
             }
         }
+
         post {
-            val customer = call.receive<Customer>()
-            with(customer) {
-                dao.addNewCustomer(name = name, email = email)
-            }
-            call.respond(status = HttpStatusCode.Created, "ok")
+            val isCreated = with(call.receive<Customer>()) {
+                customerService.createCustomer(name = name, email = email)
+            } != null
+
+            if (isCreated) call.respond(status = HttpStatusCode.Created, "ok")
+            else call.respond(status = HttpStatusCode.UnprocessableEntity, "Falha ao criar usuário")
         }
 
         delete("/{id?}") {
-            val id = call.parameters["id"]
-            if (id != null) {
-                dao.deleteCustomer(id.toInt())
-                call.respond(status = HttpStatusCode.OK, "Deletado com sucesso")
-            } else call.respond(status = HttpStatusCode.BadRequest, message = "Id de usuário não encontrado")
+            call.parameters["id"]?.let { id ->
+                val isDeleted = customerService.deleteCustomer(id.toInt())
+
+                if (isDeleted) call.respond(message = HttpStatusCode.OK)
+                else call.respond(message = HttpStatusCode.UnprocessableEntity)
+            }
+            call.respond(message = HttpStatusCode.BadRequest)
         }
     }
 }
