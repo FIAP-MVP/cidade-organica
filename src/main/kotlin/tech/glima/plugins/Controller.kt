@@ -1,12 +1,10 @@
 package tech.glima.plugins
 
-import io.ktor.server.routing.*
-import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.response.*
-import io.ktor.server.request.*
-import tech.glima.model.Customer
-import tech.glima.routes.customerRouting
+import io.ktor.server.routing.*
+import tech.glima.controller.cityController
+import tech.glima.controller.customerController
 
 fun Application.configureRouting() {
 
@@ -17,7 +15,10 @@ fun Application.configureRouting() {
         }
 
         route("/customer") {
-            customerRouting()
+            customerController()
+        }
+        route("/city"){
+            cityController()
         }
     }
 }

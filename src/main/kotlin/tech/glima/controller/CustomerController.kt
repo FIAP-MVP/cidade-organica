@@ -1,4 +1,4 @@
-package tech.glima.routes
+package tech.glima.controller
 
 import io.ktor.http.*
 import io.ktor.server.application.*
@@ -10,7 +10,7 @@ import org.koin.ktor.ext.inject
 import tech.glima.model.Customer
 import tech.glima.service.CustomerService
 
-fun Route.customerRouting() {
+fun Route.customerController() {
 
     val customerService: CustomerService by inject()
 
@@ -48,7 +48,7 @@ fun Route.customerRouting() {
 
         delete("/{id?}") {
             call.parameters["id"]?.let { id ->
-                val isDeleted = customerService.deleteCustomer(id.toInt())
+                val isDeleted = customerService.delete(id.toInt())
 
                 if (isDeleted) call.respond(message = HttpStatusCode.OK)
                 else call.respond(message = HttpStatusCode.UnprocessableEntity)

@@ -3,7 +3,8 @@ package tech.glima
 import io.ktor.server.application.*
 import tech.glima.database.dao.DatabaseFactory
 import tech.glima.di.startKoin
-import tech.glima.plugins.*
+import tech.glima.plugins.configureRouting
+import tech.glima.plugins.configureSerialization
 
 fun main(args: Array<String>) = io.ktor.server.netty.EngineMain.main(args)
 
