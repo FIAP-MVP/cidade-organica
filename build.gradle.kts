@@ -8,6 +8,8 @@ val h2_version: String by project
 val kotest_version: String by project
 val mockk_version : String by project
 val koin_version : String by project
+val json_version : String by project
+val oracle_driver_version : String by project
 
 plugins {
     application
@@ -39,7 +41,7 @@ dependencies {
     implementation("io.ktor:ktor-server-content-negotiation:$ktor_version")
     implementation("io.ktor:ktor-serialization-kotlinx-json:$ktor_version")
     implementation("ch.qos.logback:logback-classic:$logback_version")
-    implementation("org.json:json:20220320")
+    implementation("org.json:json:$json_version")
 
 
     // database
@@ -47,7 +49,7 @@ dependencies {
     implementation("org.jetbrains.exposed:exposed-dao:$exposed_version")
     implementation("org.jetbrains.exposed:exposed-jdbc:$exposed_version")
     implementation("com.h2database:h2:$h2_version")
-    implementation("com.oracle.database.jdbc:ojdbc8:21.7.0.0")
+    implementation("com.oracle.database.jdbc:ojdbc8:$oracle_driver_version")
 
     //Test
     testImplementation("io.ktor:ktor-server-test-host:$ktor_version")
