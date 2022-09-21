@@ -7,6 +7,7 @@ val exposed_version: String by project
 val h2_version: String by project
 val kotest_version: String by project
 val mockk_version : String by project
+val koin_version : String by project
 
 plugins {
     application
@@ -38,6 +39,8 @@ dependencies {
     implementation("io.ktor:ktor-server-content-negotiation:$ktor_version")
     implementation("io.ktor:ktor-serialization-kotlinx-json:$ktor_version")
     implementation("ch.qos.logback:logback-classic:$logback_version")
+    implementation("org.json:json:20220320")
+
 
     // database
     implementation("org.jetbrains.exposed:exposed-core:$exposed_version")
@@ -46,11 +49,15 @@ dependencies {
     implementation("com.h2database:h2:$h2_version")
     implementation("com.oracle.database.jdbc:ojdbc8:21.7.0.0")
 
-
     //Test
     testImplementation("io.ktor:ktor-server-test-host:$ktor_version")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version")
     testImplementation("io.kotest:kotest-runner-junit5:$kotest_version")
     testImplementation("io.kotest:kotest-assertions-core:$kotest_version")
     testImplementation("io.mockk:mockk:$mockk_version")
+
+    implementation("io.insert-koin:koin-core:$koin_version")
+    implementation ("io.insert-koin:koin-ktor:$koin_version")
+    implementation("io.insert-koin:koin-logger-slf4j:$koin_version")
+    testImplementation("io.insert-koin:koin-test:$koin_version")
 }
