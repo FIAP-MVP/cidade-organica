@@ -16,12 +16,12 @@ fun Route.customerController() {
 
     route("") {
         get {
-            call.respond(customerService.listAllCustomers())
+            call.respond(customerService.list())
         }
 
         get("/{id?}") {
             val id = call.parameters["id"]?.toInt()
-            customerService.getCustomer(id)?.let {
+            customerService.get(id)?.let {
                 call.respond(it)
             }
             call.respond(HttpStatusCode.BadRequest, JSONObject())
@@ -39,11 +39,11 @@ fun Route.customerController() {
 
         post {
             val isCreated = with(call.receive<Customer>()) {
-                customerService.createCustomer(name = name, email = email)
+                customerService.create(name = name, email = email)
             } != null
 
             if (isCreated) call.respond(status = HttpStatusCode.Created, "ok")
-            else call.respond(status = HttpStatusCode.UnprocessableEntity, "Falha ao criar usuário")
+            else call.respond(status = HttpStatusCode.UnprocessableEntity, "Falha ao criar Usuário")
         }
 
         delete("/{id?}") {

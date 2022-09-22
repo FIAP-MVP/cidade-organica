@@ -6,7 +6,7 @@ import org.jetbrains.exposed.sql.Table
 @Serializable
 data class City (val id: Int? = null, val name : String, val populationNumber : Int)
 
-object Citys : Table() {
+object Cities : Table() {
 
     val id = integer("id").autoIncrement()
     val name = varchar("name", 80)

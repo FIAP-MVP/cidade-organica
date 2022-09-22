@@ -6,15 +6,15 @@ import tech.glima.model.Customer
 import tech.glima.model.Customers
 
 interface CustomerService {
-    suspend fun listAllCustomers(): Map<String, List<Customer>>
-    suspend fun getCustomer(id: Int?): Customer?
-    suspend fun createCustomer(name: String, email: String): Customer?
+    suspend fun list(): Map<String, List<Customer>>
+    suspend fun get(id: Int?): Customer?
+    suspend fun create(name: String, email: String): Customer?
     suspend fun update(id: Int, name: String, email: String): Boolean
     suspend fun delete(id: Int): Boolean
 }
 
 class CustomerServiceImpl : CustomerService {
-    override suspend fun listAllCustomers(): Map<String, List<Customer>> {
+    override suspend fun list(): Map<String, List<Customer>> {
         return mapOf("customers" to dbQuery {
             Customers.selectAll().map { row ->
                 mapToCity(row)
@@ -22,7 +22,7 @@ class CustomerServiceImpl : CustomerService {
         })
     }
 
-    override suspend fun getCustomer(id: Int?): Customer? {
+    override suspend fun get(id: Int?): Customer? {
         if (id != null) {
             return dbQuery {
                 Customers
@@ -34,7 +34,7 @@ class CustomerServiceImpl : CustomerService {
         return null
     }
 
-    override suspend fun createCustomer(name: String, email: String): Customer? = dbQuery {
+    override suspend fun create(name: String, email: String): Customer? = dbQuery {
         val insertQuery = Customers.insert {
             it[Customers.name] = name
             it[Customers.email] = email

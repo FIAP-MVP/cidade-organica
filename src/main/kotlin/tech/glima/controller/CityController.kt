@@ -16,12 +16,12 @@ fun Route.cityController() {
 
     route("") {
         get {
-            call.respond(cityService.listAllCitys())
+            call.respond(cityService.listAll())
         }
 
         get("/{id?}") {
             val id = call.parameters["id"]?.toInt()
-            cityService.getCity(id)?.let {
+            cityService.get(id)?.let {
                 call.respond(it)
             }
             call.respond(HttpStatusCode.BadRequest, JSONObject())
@@ -39,11 +39,11 @@ fun Route.cityController() {
 
         post {
             val isCreated = with(call.receive<City>()) {
-                cityService.createCity(name = name, populationNumber = populationNumber)
+                cityService.create(name = name, populationNumber = populationNumber)
             } != null
 
             if (isCreated) call.respond(status = HttpStatusCode.Created, "ok")
-            else call.respond(status = HttpStatusCode.UnprocessableEntity, "Falha ao criar usuário")
+            else call.respond(status = HttpStatusCode.UnprocessableEntity, "Falha ao criar City")
         }
 
         delete("/{id?}") {
