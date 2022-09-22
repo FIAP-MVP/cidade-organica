@@ -1,4 +1,4 @@
-package tech.glima.routes
+package tech.glima.controller
 
 import io.ktor.http.*
 import io.ktor.server.application.*
@@ -7,48 +7,48 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import org.json.JSONObject
 import org.koin.ktor.ext.inject
-import tech.glima.model.Customer
-import tech.glima.service.CustomerService
+import tech.glima.model.City
+import tech.glima.service.CityService
 
-fun Route.customerRouting() {
+fun Route.cityController() {
 
-    val customerService: CustomerService by inject()
+    val cityService: CityService by inject()
 
     route("") {
         get {
-            call.respond(customerService.listAllCustomers())
+            call.respond(cityService.listAll())
         }
 
         get("/{id?}") {
             val id = call.parameters["id"]?.toInt()
-            customerService.getCustomer(id)?.let {
+            cityService.get(id)?.let {
                 call.respond(it)
             }
             call.respond(HttpStatusCode.BadRequest, JSONObject())
         }
 
         put("/{id?}") {
-            val customer = call.receive<Customer>()
+            val city = call.receive<City>()
             call.parameters["id"]?.let { id ->
-                with(customer) {
-                    customerService.update(id = id.toInt(), name = name, email = email)
+                with(city) {
+                    cityService.update(id = id.toInt(), name = name, populationNumber = populationNumber)
                 }
                 call.respond(status = HttpStatusCode.OK, "ok")
             }
         }
 
         post {
-            val isCreated = with(call.receive<Customer>()) {
-                customerService.createCustomer(name = name, email = email)
+            val isCreated = with(call.receive<City>()) {
+                cityService.create(name = name, populationNumber = populationNumber)
             } != null
 
             if (isCreated) call.respond(status = HttpStatusCode.Created, "ok")
-            else call.respond(status = HttpStatusCode.UnprocessableEntity, "Falha ao criar usuário")
+            else call.respond(status = HttpStatusCode.UnprocessableEntity, "Falha ao criar City")
         }
 
         delete("/{id?}") {
             call.parameters["id"]?.let { id ->
-                val isDeleted = customerService.deleteCustomer(id.toInt())
+                val isDeleted = cityService.delete(id.toInt())
 
                 if (isDeleted) call.respond(message = HttpStatusCode.OK)
                 else call.respond(message = HttpStatusCode.UnprocessableEntity)

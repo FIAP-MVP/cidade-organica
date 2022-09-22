@@ -4,13 +4,13 @@ import kotlinx.serialization.Serializable
 import org.jetbrains.exposed.sql.Table
 
 @Serializable
-data class Customer(val id: Int? = null, val name: String, val email: String)
+data class City (val id: Int? = null, val name : String, val populationNumber : Int)
 
-object Customers : Table() {
+object Cities : Table() {
 
     val id = integer("id").autoIncrement()
-    val name = varchar("name", 60)
-    val email = varchar("email", 120)
+    val name = varchar("name", 80)
+    val populationNumber = integer("populationNumber")
 
     override val primaryKey = PrimaryKey(id)
 }
