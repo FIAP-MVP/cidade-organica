@@ -1,10 +1,7 @@
 package tech.glima.di.module
 
 import org.koin.dsl.module
-import tech.glima.service.CityService
-import tech.glima.service.CityServiceImpl
-import tech.glima.service.CustomerService
-import tech.glima.service.CustomerServiceImpl
+import tech.glima.service.*
 
 object ServiceModule {
 
@@ -15,6 +12,9 @@ object ServiceModule {
         }
         single<CityService> {
             CityServiceImpl()
+        }
+        single<CultivationUnitService>{
+            CultivationUnitUnitServiceImpl()
         }
     }
 }

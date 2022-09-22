@@ -16,7 +16,7 @@ fun Route.cityController() {
 
     route("") {
         get {
-            call.respond(cityService.listAll())
+            call.respond(cityService.getAll())
         }
 
         get("/{id?}") {

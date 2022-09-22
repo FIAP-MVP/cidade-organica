@@ -6,7 +6,7 @@ import tech.glima.model.Cities
 import tech.glima.model.City
 
 interface CityService {
-    suspend fun listAll(): Map<String, List<City>>
+    suspend fun getAll(): Map<String, List<City>>
     suspend fun get(id: Int?): City?
     suspend fun create(name: String, populationNumber: Int): City?
     suspend fun update(id: Int, name: String, populationNumber: Int): Boolean
@@ -14,10 +14,10 @@ interface CityService {
 }
 
 class CityServiceImpl : CityService {
-    override suspend fun listAll(): Map<String, List<City>> {
+    override suspend fun getAll(): Map<String, List<City>> {
         return mapOf("city" to dbQuery {
-            Cities.selectAll().map { row ->
-                mapToCity(row)
+            Cities.selectAll().map { cityResult ->
+                mapToCity(cityResult)
             }
         })
     }
@@ -35,25 +35,27 @@ class CityServiceImpl : CityService {
     }
 
     override suspend fun create(name: String, populationNumber: Int): City? = dbQuery {
-        val insertQuery = Cities.insert {
-            it[Cities.name] = name
-            it[Cities.populationNumber] = populationNumber
-        }
+        val insertQuery = Cities
+            .insert { city ->
+                city[Cities.name] = name
+                city[Cities.populationNumber] = populationNumber
+            }
         insertQuery.resultedValues?.singleOrNull()?.let(::mapToCity)
     }
 
     override suspend fun update(id: Int, name: String, populationNumber: Int): Boolean {
         return dbQuery {
-            Cities.update({ Cities.id eq id }) {
-                it[Cities.name] = name
-                it[Cities.populationNumber] = populationNumber
+            Cities.update({ Cities.id eq id }) { city ->
+                city[Cities.name] = name
+                city[Cities.populationNumber] = populationNumber
             } > 0
         }
     }
 
 
     override suspend fun delete(id: Int): Boolean = dbQuery {
-        Cities.deleteWhere { Cities.id eq id } > 0
+        Cities
+            .deleteWhere { Cities.id eq id } > 0
     }
 }
 

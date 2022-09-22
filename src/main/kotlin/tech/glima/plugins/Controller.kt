@@ -4,6 +4,7 @@ import io.ktor.server.application.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import tech.glima.controller.cityController
+import tech.glima.controller.cultivationUnit
 import tech.glima.controller.customerController
 
 fun Application.configureRouting() {
@@ -19,6 +20,9 @@ fun Application.configureRouting() {
         }
         route("/city"){
             cityController()
+        }
+        route("/unit"){
+            cultivationUnit()
         }
     }
 }
