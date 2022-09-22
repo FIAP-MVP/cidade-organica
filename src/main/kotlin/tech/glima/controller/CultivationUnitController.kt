@@ -7,48 +7,48 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import org.json.JSONObject
 import org.koin.ktor.ext.inject
-import tech.glima.model.Customer
-import tech.glima.service.CustomerService
+import tech.glima.model.CultivationUnit
+import tech.glima.service.CultivationUnitService
 
-fun Route.customerController() {
-
-    val customerService: CustomerService by inject()
+fun Route.cultivationUnit(){
+    val cultivationUnitService : CultivationUnitService by inject()
 
     route("") {
         get {
-            call.respond(customerService.getAll())
+            call.respond(cultivationUnitService.getAll())
         }
 
         get("/{id?}") {
             val id = call.parameters["id"]?.toInt()
-            customerService.get(id)?.let {
+            cultivationUnitService.get(id)?.let {
                 call.respond(it)
             }
+            // TODO MUDAR A LÓGICA SE NÃO HOUVER UNIDADES, REGRA DE NEGÓCIO NÃO PODE SER TRATADA COM HTTP CODE
             call.respond(HttpStatusCode.BadRequest, JSONObject())
         }
 
         put("/{id?}") {
-            val customer = call.receive<Customer>()
+            val cultivation = call.receive<CultivationUnit>()
             call.parameters["id"]?.let { id ->
-                with(customer) {
-                    customerService.update(id = id.toInt(), name = name, email = email)
+                with(cultivation) {
+                    cultivationUnitService.update(id = id.toInt(), name = name)
                 }
                 call.respond(status = HttpStatusCode.OK, "ok")
             }
         }
 
         post {
-            val isCreated = with(call.receive<Customer>()) {
-                customerService.create(name = name, email = email)
+            val isCreated = with(call.receive<CultivationUnit>()) {
+                cultivationUnitService.create(name = name)
             } != null
 
             if (isCreated) call.respond(status = HttpStatusCode.Created, "ok")
-            else call.respond(status = HttpStatusCode.UnprocessableEntity, "Falha ao criar Usuário")
+            else call.respond(status = HttpStatusCode.UnprocessableEntity, "Falha ao criar CultivationUnit")
         }
 
         delete("/{id?}") {
             call.parameters["id"]?.let { id ->
-                val isDeleted = customerService.delete(id.toInt())
+                val isDeleted = cultivationUnitService.delete(id.toInt())
 
                 if (isDeleted) call.respond(message = HttpStatusCode.OK)
                 else call.respond(message = HttpStatusCode.UnprocessableEntity)

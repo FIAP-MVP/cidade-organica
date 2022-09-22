@@ -6,7 +6,7 @@ import tech.glima.model.Customer
 import tech.glima.model.Customers
 
 interface CustomerService {
-    suspend fun list(): Map<String, List<Customer>>
+    suspend fun getAll(): Map<String, List<Customer>>
     suspend fun get(id: Int?): Customer?
     suspend fun create(name: String, email: String): Customer?
     suspend fun update(id: Int, name: String, email: String): Boolean
@@ -14,10 +14,10 @@ interface CustomerService {
 }
 
 class CustomerServiceImpl : CustomerService {
-    override suspend fun list(): Map<String, List<Customer>> {
+    override suspend fun getAll(): Map<String, List<Customer>> {
         return mapOf("customers" to dbQuery {
-            Customers.selectAll().map { row ->
-                mapToCity(row)
+            Customers.selectAll().map { customerResult ->
+                mapToCity(customerResult)
             }
         })
     }
@@ -35,18 +35,18 @@ class CustomerServiceImpl : CustomerService {
     }
 
     override suspend fun create(name: String, email: String): Customer? = dbQuery {
-        val insertQuery = Customers.insert {
-            it[Customers.name] = name
-            it[Customers.email] = email
+        val insertQuery = Customers.insert { customer ->
+            customer[Customers.name] = name
+            customer[Customers.email] = email
         }
         insertQuery.resultedValues?.singleOrNull()?.let(::mapToCity)
     }
 
     override suspend fun update(id: Int, name: String, email: String): Boolean {
         return dbQuery {
-            Customers.update({ Customers.id eq id }) {
-                it[Customers.name] = name
-                it[Customers.email] = email
+            Customers.update({ Customers.id eq id }) { customer ->
+                customer[Customers.name] = name
+                customer[Customers.email] = email
             } > 0
         }
     }

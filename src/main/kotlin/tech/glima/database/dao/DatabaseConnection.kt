@@ -6,6 +6,7 @@ import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 import org.jetbrains.exposed.sql.transactions.transaction
 import tech.glima.model.Cities
+import tech.glima.model.CultivationUnits
 import tech.glima.model.Customers
 
 object DatabaseFactory {
@@ -24,6 +25,7 @@ object DatabaseFactory {
         transaction(database) {
             SchemaUtils.create(Customers)
             SchemaUtils.create(Cities)
+            SchemaUtils.create(CultivationUnits)
         }
     }
 
