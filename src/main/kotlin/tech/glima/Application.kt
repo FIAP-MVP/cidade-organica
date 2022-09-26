@@ -1,6 +1,8 @@
 package tech.glima
 
 import io.ktor.server.application.*
+import io.ktor.server.engine.*
+import io.ktor.server.netty.*
 import tech.glima.database.dao.DatabaseFactory
 import tech.glima.di.startKoin
 import tech.glima.plugins.configureRouting
@@ -15,4 +17,3 @@ fun Application.main() {
     configureRouting()
     configureSerialization()
 }
-
