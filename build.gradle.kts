@@ -34,6 +34,7 @@ tasks.withType<Test>().configureEach {
 }
 
 repositories {
+    google()
     mavenCentral()
 }
 
